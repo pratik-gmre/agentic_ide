@@ -1,7 +1,16 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { IBM_Plex_Mono,Inter } from "next/font/google";
-import { ThemeProvider } from "@/components/theme-provider"
+import { IBM_Plex_Mono, Inter } from "next/font/google";
+import { ThemeProvider } from "@/components/theme-provider";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
+import {dark} from "@clerk/themes"
 
 const inter = Inter({
   variable: "--font-inter",
@@ -11,7 +20,7 @@ const inter = Inter({
 const plexmono = IBM_Plex_Mono({
   variable: "--font-plex-mono",
   subsets: ["latin"],
-  weight:["400","500","600","700"]
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -25,18 +34,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${inter.variable} ${plexmono.variable} antialiased`}
-      >
-<ThemeProvider
+    <ClerkProvider 
+    appearance={{
+      theme:dark
+    }}
+    >
+      <html lang="en" suppressHydrationWarning>
+        <body className={`${inter.variable} ${plexmono.variable} antialiased`}>
+          <ThemeProvider
             attribute="class"
             defaultTheme="dark"
             enableSystem
             disableTransitionOnChange
           >
             {children}
-          </ThemeProvider>      </body>
-    </html>
+          </ThemeProvider>{" "}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
