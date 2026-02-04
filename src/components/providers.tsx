@@ -15,21 +15,21 @@ const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL);
 
 export default function Providers({ children }: { children: ReactNode }) {
   return (
+     <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
     <ClerkProvider
       appearance={{
         theme: dark,
       }}
     >
       <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
           <Authenticated>{children}</Authenticated>
-        </ThemeProvider>
       </ConvexProviderWithClerk>
     </ClerkProvider>
+        </ThemeProvider>
   );
 }
