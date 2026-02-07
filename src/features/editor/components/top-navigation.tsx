@@ -75,7 +75,7 @@ export const TopNavigation = ({ projectId }: { projectId: Id<"projects"> }) => {
 
   return (
     <ScrollArea className="flex-1">
-      <div className="bg-sidebar  flex items-center h-8.75 border-b">
+      <div className="bg-sidebar  flex items-center h-8.75 border-b ">
         {openTabs.map((fileId, index) => (
           <Tab
             key={fileId}
