@@ -1,4 +1,4 @@
-# Agentic ide 
+# Agentic IDE
 
 This  is a browser-based IDE inspired by Cursor AI, featuring:
 
