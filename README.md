@@ -1,6 +1,7 @@
+
 # Agentic IDE
 
-This  is a browser-based IDE inspired by Cursor AI, featuring:
+This is a browser-based IDE inspired by Cursor AI, featuring:
 
 - Real-time collaborative code editing
 - AI-powered code suggestions and quick edit (Cmd+K)
@@ -41,8 +42,8 @@ This  is a browser-based IDE inspired by Cursor AI, featuring:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/pratik-gmre/Agentic_IDE
-   cd Agentic_IDE
+   git clone https://github.com/pratik-gmre/agentic_ide
+   cd agentic_ide
    ```
 
 2. Install dependencies:
@@ -67,7 +68,7 @@ This  is a browser-based IDE inspired by Cursor AI, featuring:
    # Convex
    NEXT_PUBLIC_CONVEX_URL=
    CONVEX_DEPLOYMENT=
-   POLARIS_CONVEX_INTERNAL_KEY=  # Generate a random string
+   IDE_CONVEX_INTERNAL_KEY=  # Generate a random string
 
    # AI Provider (choose one)
    ANTHROPIC_API_KEY=        # Preferred - Claude Sonnet 4

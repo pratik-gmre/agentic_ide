@@ -1,5 +1,6 @@
 import { Id } from "../../../../convex/_generated/dataModel";
 import { useEditor } from "../hooks/use-editor";
+import { FileBreadCrumbs } from "./file-breadcrums";
 
 import { TopNavigation } from "./top-navigation";
 
@@ -17,7 +18,7 @@ const {activeTabId} = useEditor(projectId)
         <TopNavigation projectId={projectId}/>
     </div>
 
-    {activeTabId && <FileBreadCrums projectId={projectId}/>}
+    {activeTabId && <FileBreadCrumbs projectId={projectId}/>}
 </div>
 
     )
