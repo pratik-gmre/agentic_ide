@@ -33,8 +33,7 @@ export const Tree = ({ projectId, item, level = 0 }: TreeProps) => {
   const createFile = useCreateFile();
   const createFolder = useCreateFolder();
 
-
-  const { openFile,closeTab , activeTabId} = useEditor(projectId)
+  const { openFile, closeTab, activeTabId } = useEditor(projectId);
 
   const folderContents = useFolderContents({
     projectId,
@@ -74,7 +73,7 @@ export const Tree = ({ projectId, item, level = 0 }: TreeProps) => {
 
   if (item.type === "file") {
     const fileName = item.name;
-    const isActive = activeTabId === item._id
+    const isActive = activeTabId === item._id;
     if (isRenaming) {
       return (
         <RenameInput
@@ -91,13 +90,13 @@ export const Tree = ({ projectId, item, level = 0 }: TreeProps) => {
         item={item}
         level={level}
         isActive={isActive}
-        onClick={() => openFile(item._id , {pinned:false})}
-        onDoubleClick={() => openFile(item._id , {pinned:true})}
+        onClick={() => openFile(item._id, { pinned: false })}
+        onDoubleClick={() => openFile(item._id, { pinned: true })}
         onRename={() => {
           setIsRenaming(true);
         }}
         onDelete={() => {
-            closeTab(item._id)
+          closeTab(item._id);
           deleteFile({ id: item._id });
         }}
       >
@@ -161,13 +160,20 @@ export const Tree = ({ projectId, item, level = 0 }: TreeProps) => {
   if (isRenaming) {
     return (
       <>
-       <RenameInput type="folder"  isOpen={isOpen} defaultValue={folderName} level={level} onSubmit={handleRename} onCancel={() => setIsRenaming(false)}/>
+        <RenameInput
+          type="folder"
+          isOpen={isOpen}
+          defaultValue={folderName}
+          level={level}
+          onSubmit={handleRename}
+          onCancel={() => setIsRenaming(false)}
+        />
         {isOpen && (
           <>
             {folderContents === undefined && (
               <LoadingRow level={level + 1}></LoadingRow>
             )}
-           
+
             {folderContents?.map((subItem) => (
               <Tree
                 key={subItem._id}

@@ -8,6 +8,10 @@ export const useCreateFile = () => {
 export const useCreateFolder = () => {
   return useMutation(api.files.createFolder);
 };
+export const useUpdateFiles = () => {
+  return useMutation(api.files.updateFile);
+  //optimistic mutation
+};
 
 export const useFolderContents = ({
   projectId,
