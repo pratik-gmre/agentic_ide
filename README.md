@@ -49,7 +49,7 @@ This is a browser-based IDE inspired by Cursor AI, featuring:
 2. Install dependencies:
 
    ```bash
-   npm install
+   pnpm install
    ```
 
 3. Set up environment variables:
@@ -84,19 +84,19 @@ This is a browser-based IDE inspired by Cursor AI, featuring:
 5. Start the Convex development server:
 
    ```bash
-   npx convex dev
+   pnpm dlx convex dev
    ```
 
 6. In a new terminal, start the Next.js development server:
 
    ```bash
-   npm run dev
+   pnpm run dev
    ```
 
 7. In another terminal, start the Inngest dev server:
 
    ```bash
-   npx inngest-cli@latest dev
+   pnpm dlx inngest-cli@latest dev
    ```
 
 8. Open [http://localhost:3000](http://localhost:3000)
@@ -168,10 +168,10 @@ convex/
 ## Scripts
 
 ```bash
-npm run dev       # Start development server
-npm run build     # Build for production
-npm run start     # Start production server
-npm run lint      # Run ESLint
+pnpm run dev       # Start development server
+pnpm run build     # Build for production
+pnpm run start     # Start production server
+pnpm run lint      # Run ESLint
 ```
 
 
