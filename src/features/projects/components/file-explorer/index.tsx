@@ -1,3 +1,4 @@
+'use client'
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import {
@@ -19,21 +20,23 @@ import {
 import { CreateInput } from "./create-input";
 import { LoadingRow } from "./loading-row";
 import { Tree } from "./tree";
+// eslint-disable-next-line react-hooks/rules-of-hooks
 
 type fileExplorerProps = {
   projectId: Id<"projects">;
 };
 
 export const FileExplorer = ({ projectId }: fileExplorerProps) => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [isOpen, setIsOpen] = useState(false);
+  const rootFiles = useFolderContents({ projectId, enabled: isOpen });
   const project = useProject(projectId);
   const [creating, setCreating] = useState<"file" | "folder" | null>(null);
   const [collapseKey, setCollapseKey] = useState(0);
   const createFile = useCreateFile();
   const createFolder = useCreateFolder();
 
-  const rootFiles = useFolderContents({ projectId, enabled: isOpen });
+  console.log("this is rootfile",rootFiles);
+  
   const handleCreate = (name: string) => {
     setCreating(null);
     if (creating === "file") {
@@ -104,8 +107,8 @@ export const FileExplorer = ({ projectId }: fileExplorerProps) => {
             </Button>
           </div>
         </div>
-        <>
-          {rootFiles === undefined && <LoadingRow level={0} />}
+        <div>
+          {rootFiles === undefined && isOpen && <LoadingRow level={0} />}
           {creating && (
             <CreateInput
               type={creating}
@@ -117,7 +120,7 @@ export const FileExplorer = ({ projectId }: fileExplorerProps) => {
           {rootFiles?.map((item)=>(
             <Tree key={`${item._id}-${collapseKey}`} item={item} level={0} projectId = {projectId}/>
           ))}
-        </>
+        </div>
       </ScrollArea>
     </div>
   );
