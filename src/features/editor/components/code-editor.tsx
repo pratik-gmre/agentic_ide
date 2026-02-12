@@ -39,6 +39,7 @@ export const CodeEditor = ({
         oneDark,
         customTheme,
         languageExtension,
+        // suggestion(fileName),
         keymap.of([indentWithTab]),
         Minimap(),
         indentationMarkers(),
