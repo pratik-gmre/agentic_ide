@@ -9,6 +9,7 @@ import { indentWithTab } from "@codemirror/commands";
 import { Minimap } from "../extensions/minimap";
 import { indentationMarkers } from "@replit/codemirror-indentation-markers";
 import { customSetup } from "./custom-setup";
+import { suggestion } from "../extensions/suggestion";
 
 interface Props {
   fileName: string;
@@ -39,7 +40,7 @@ export const CodeEditor = ({
         oneDark,
         customTheme,
         languageExtension,
-        // suggestion(fileName),
+        suggestion(fileName),
         keymap.of([indentWithTab]),
         Minimap(),
         indentationMarkers(),
