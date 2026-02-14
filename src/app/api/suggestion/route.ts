@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { openai } from '@ai-sdk/openai';
+import { generateText, Output } from 'ai';
 
-const suggestion = z.object({
+const suggestionSchema= z.object({
   suggestion: z
     .string()
     .describe(
@@ -88,5 +90,17 @@ export async function POST(request: Request) {
       .replace("{textAfterCursor}", textAfterCursor)
       .replace("{nextLines}", nextLines || "")
       .replace("{lineNumber}", lineNumber.toString());
-  } catch {}
+
+
+      const {output} = await generateText({
+        model:openai("gpt-4.1"),
+        output:Output.object({schema:suggestionSchema}),
+        prompt
+      })
+
+      return NextResponse.json({suggestion:output.suggestion})
+  } catch (error){
+    console.error("Suggestion error",error)
+    return NextResponse.json({error:"failed to generate suggestion"},{status:500})
+  }
 }
