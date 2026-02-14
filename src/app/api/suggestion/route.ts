@@ -1,10 +1,13 @@
+import { NextResponse } from "next/server";
 import { z } from "zod";
 
 const suggestion = z.object({
-    suggestion:z.string().describe("this code to insert at cursor or empty string if no completion needed")
-})
-
-
+  suggestion: z
+    .string()
+    .describe(
+      "this code to insert at cursor or empty string if no completion needed",
+    ),
+});
 
 const SUGGESTION_PROMPT = `You are a code suggestion assistant.
 
@@ -58,4 +61,32 @@ Return ONLY the edited version of the selected code.
 Maintain the same indentation level as the original.
 Do not include any explanations or comments unless requested.
 If the instruction is unclear or cannot be applied, return the original code unchanged.
-</instructions>`
+</instructions>`;
+
+export async function POST(request: Request) {
+  try {
+    const {
+      fileName,
+      code,
+      currentLine,
+      previousLines,
+      textBeforeCursor,
+      textAfterCursor,
+      nextLines,
+      lineNumber,
+    } = await request.json();
+
+    if (!code) {
+      return NextResponse.json({ error: "Code is required" }, { status: 400 });
+    }
+
+    const prompt = SUGGESTION_PROMPT.replace("{fileName}", fileName)
+      .replace("{code}", code)
+      .replace("{previousLines}", previousLines || "")
+      .replace("{currentLine}", currentLine)
+      .replace("{textBeforeCursor}", textBeforeCursor)
+      .replace("{textAfterCursor}", textAfterCursor)
+      .replace("{nextLines}", nextLines || "")
+      .replace("{lineNumber}", lineNumber.toString());
+  } catch {}
+}
