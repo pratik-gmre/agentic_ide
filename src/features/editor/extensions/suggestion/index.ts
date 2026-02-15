@@ -10,7 +10,7 @@ import {
 } from "@codemirror/view";
 import { de } from "date-fns/locale";
 
-import {fetcher} from "./fetcher"
+import { fetcher } from "./fetcher";
 
 const setSuggestionEffect = StateEffect.define<string | null>();
 const suggestionState = StateField.define<string | null>({
@@ -52,6 +52,42 @@ const generateFakeSuggestion = (textBeforeCursor: string): string | null => {
   return null;
 };
 
+const generatePayload = (view: EditorView, fileName: string) => {
+  const code = view.state.doc.toString();
+  if (!code || code.trim().length === 0) return null;
+
+  const cursorPosition = view.state.selection.main.head;
+  const currentLine = view.state.doc.lineAt(cursorPosition);
+  const cursorInLine = cursorPosition - currentLine.from;
+
+  const previewLines: string[] = [];
+  const previewLinesToFetch = Math.min(5, currentLine.number - 1);
+  for (let i = previewLinesToFetch; i >= 1; i--) {
+    previewLines.push(view.state.doc.line(currentLine.number - i).text);
+  }
+
+  const nextLines:string[]= []
+  const totalLines = view.state.doc.lines;
+  const linesToFetch = Math.min(5,totalLines - currentLine.number);
+  for (let i = 1; i <= linesToFetch; i++) {
+    nextLines.push(view.state.doc.line(currentLine.number + i).text);
+  }
+
+
+
+
+  return {
+    fileName,
+    code,
+    currentLine: currentLine.text,
+    previousLines: previewLines.join("\n"),
+    textBeforeCursor: currentLine.text.slice(0, cursorInLine),
+    textAfterCursor: currentLine.text.slice(cursorInLine),
+    nextLines: nextLines.join("\n"),
+    lineNumber: currentLine.number,
+  };
+};
+
 const createDebouncePlugin = (fileName: string) => {
   return ViewPlugin.fromClass(
     class DebouncePlugin {
@@ -69,6 +105,8 @@ const createDebouncePlugin = (fileName: string) => {
         if (debounceTimer !== null) {
           clearTimeout(debounceTimer);
         }
+
+        
         isWaitingForSuggestion = true;
         debounceTimer = window.setTimeout(async () => {
           //Fake Suggestion(delete this)
