@@ -10,6 +10,8 @@ import {
 } from "@codemirror/view";
 import { de } from "date-fns/locale";
 
+import {fetcher} from "./fetcher"
+
 const setSuggestionEffect = StateEffect.define<string | null>();
 const suggestionState = StateField.define<string | null>({
   create() {
@@ -38,63 +40,56 @@ class SuggestionWidget extends WidgetType {
   }
 }
 
+let debounceTimer: number | null = null;
+let isWaitingForSuggestion = false;
+const DEBOUNCE_DELAY = 300;
 
-let debounceTimer : number | null = null 
-let isWaitingForSuggestion =false;
-const DEBOUNCE_DELAY = 300
+const generateFakeSuggestion = (textBeforeCursor: string): string | null => {
+  const trimmed = textBeforeCursor.trimEnd();
+  if (trimmed.endsWith("const")) return "myVariable = ";
+  if (trimmed.endsWith("function")) return " myFunction(){ \n \n} ";
+  if (trimmed.endsWith("console.")) return "log() ";
+  return null;
+};
 
-const generateFakeSuggestion = (textBeforeCursor:string):string|null=>{
-    const trimmed = textBeforeCursor.trimEnd();
-    if(trimmed.endsWith("const")) return "myVariable = ";
-    if(trimmed.endsWith("function")) return " myFunction(){ \n \n} ";
-    if(trimmed.endsWith("console.")) return "log() ";
-    return null
+const createDebouncePlugin = (fileName: string) => {
+  return ViewPlugin.fromClass(
+    class DebouncePlugin {
+      constructor(view: EditorView) {
+        this.triggerSuggestion(view);
+      }
 
-}
-
-
-const createDebouncePlugin = (fileName:string)=>{
-    return ViewPlugin.fromClass(
-        class DebouncePlugin {
-            constructor(view:EditorView){
-                this.triggerSuggestion(view)
-            }
-
-            update(update: ViewUpdate){
-                if(update.docChanged || update.selectionSet){
-                    this.triggerSuggestion(update.view)
-                }
-            }
-
-            triggerSuggestion(view: EditorView){
-                if(debounceTimer!== null){
-                    clearTimeout(debounceTimer)
-                }
-                 isWaitingForSuggestion = true;
-                debounceTimer = window.setTimeout(async()=>{
-                    //Fake Suggestion(delete this)
-                    const cursor = view.state.selection.main.head;
-                    const line= view.state.doc.lineAt(cursor)
-                    const textBeforeCursor = line.text.slice(0,cursor-line.from)
-                    const suggestion = generateFakeSuggestion(textBeforeCursor)
-                    isWaitingForSuggestion = false;
-                    view.dispatch({
-                        effects:setSuggestionEffect.of(suggestion),
-                    })
-                },DEBOUNCE_DELAY)
-            }
-             destory(){
-                if(debounceTimer!== null){
-                    clearTimeout(debounceTimer)
-                }
-            }
+      update(update: ViewUpdate) {
+        if (update.docChanged || update.selectionSet) {
+          this.triggerSuggestion(update.view);
         }
-    )
-}
+      }
 
-
-           
-
+      triggerSuggestion(view: EditorView) {
+        if (debounceTimer !== null) {
+          clearTimeout(debounceTimer);
+        }
+        isWaitingForSuggestion = true;
+        debounceTimer = window.setTimeout(async () => {
+          //Fake Suggestion(delete this)
+          const cursor = view.state.selection.main.head;
+          const line = view.state.doc.lineAt(cursor);
+          const textBeforeCursor = line.text.slice(0, cursor - line.from);
+          const suggestion = generateFakeSuggestion(textBeforeCursor);
+          isWaitingForSuggestion = false;
+          view.dispatch({
+            effects: setSuggestionEffect.of(suggestion),
+          });
+        }, DEBOUNCE_DELAY);
+      }
+      destory() {
+        if (debounceTimer !== null) {
+          clearTimeout(debounceTimer);
+        }
+      }
+    },
+  );
+};
 
 const renderPlugin = ViewPlugin.fromClass(
   class {
@@ -114,9 +109,9 @@ const renderPlugin = ViewPlugin.fromClass(
     }
 
     build(view: EditorView) {
-        if(isWaitingForSuggestion){
-            return Decoration.none;
-        }
+      if (isWaitingForSuggestion) {
+        return Decoration.none;
+      }
       const suggestion = view.state.field(suggestionState);
       if (!suggestion) {
         return Decoration.none;
@@ -136,26 +131,28 @@ const renderPlugin = ViewPlugin.fromClass(
 );
 
 const acceptSuggestionKeymap = keymap.of([
-    {
-        key:"Tab",
-        run:(view)=>{
-            const suggestion = view.state.field(suggestionState)
-        if(!suggestion) {
-            return false;
-        }
+  {
+    key: "Tab",
+    run: (view) => {
+      const suggestion = view.state.field(suggestionState);
+      if (!suggestion) {
+        return false;
+      }
 
+      const cursor = view.state.selection.main.head;
+      view.dispatch({
+        changes: { from: cursor, insert: suggestion },
+        selection: { anchor: cursor + suggestion.length },
+        effects: setSuggestionEffect.of(null),
+      });
+      return true;
+    },
+  },
+]);
 
-        const cursor = view.state.selection.main.head;
-        view.dispatch({
-            changes:{from:cursor,insert:suggestion}
-            ,
-            selection:{anchor:cursor + suggestion.length}
-            ,
-            effects:setSuggestionEffect.of(null)
-        })
-        return true;
-        }
-    }
-])
-
-export const suggestion = (fileName: string) => [suggestionState, renderPlugin,acceptSuggestionKeymap,createDebouncePlugin(fileName)];
+export const suggestion = (fileName: string) => [
+  suggestionState,
+  renderPlugin,
+  acceptSuggestionKeymap,
+  createDebouncePlugin(fileName),
+];

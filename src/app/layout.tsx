@@ -3,6 +3,7 @@ import "./globals.css";
 import { IBM_Plex_Mono, Inter } from "next/font/google";
 
 import Providers from "@/components/providers";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -26,14 +27,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-   
-      <html className="dark" lang="en" suppressHydrationWarning>
-        <body className={`${inter.variable} ${plexmono.variable} antialiased`}>
-         
-            <Providers>{children}</Providers>
-
-        </body>
-      </html>
-
+    <html className="dark" lang="en" suppressHydrationWarning>
+      <body className={`${inter.variable} ${plexmono.variable} antialiased`}>
+        <Providers>
+          {children}
+          <Toaster />
+          
+          </Providers>
+      </body>
+    </html>
   );
 }
