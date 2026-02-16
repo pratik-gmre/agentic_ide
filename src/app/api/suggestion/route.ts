@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { openai } from '@ai-sdk/openai';
 import { generateText, Output } from 'ai';
+import { auth } from "@clerk/nextjs/server";
 
 const suggestionSchema= z.object({
   suggestion: z
@@ -67,6 +68,12 @@ If the instruction is unclear or cannot be applied, return the original code unc
 
 export async function POST(request: Request) {
   try {
+
+    const {userId} = await auth()
+
+    if(!userId){
+      return NextResponse.json({error:"Unauthorized"},{status:401})
+    }
     const {
       fileName,
       code,
