@@ -93,7 +93,7 @@ export async function POST(request: Request) {
 
 
       const {output} = await generateText({
-        model:openai("gpt-4.1"),
+        model:openai("gpt-5"),
         output:Output.object({schema:suggestionSchema}),
         prompt
       })

@@ -29,13 +29,15 @@ export const fetcher = async(
 ):Promise<string | null>=>{
 try {
     const validatePayload = suggestionRequestSchema.parse(payload)
+    
     const response = await ky.post("/api/suggestion",{
         json:validatePayload,
         signal,
-        timeout:5000,
+        timeout:50000,
         retry:0
     }).json<SuggestionResponse>();
-
+    
+    console.log("this is validate payload",response);
     const validatedResponse =  suggestionResponseSchema.parse(response)
     return validatedResponse.suggestion || null;
 } catch (error) {
@@ -43,6 +45,7 @@ try {
         return null
     }
     toast.error("Failed to fetch suggestion")
+    console.log("this is error",error);
     return null;
     
 }
