@@ -33,7 +33,7 @@ try {
     const response = await ky.post("/api/suggestion",{
         json:validatePayload,
         signal,
-        timeout:50000,
+        timeout:10_000, 
         retry:0
     }).json<SuggestionResponse>();
     
