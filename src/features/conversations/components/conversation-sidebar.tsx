@@ -59,8 +59,7 @@ export const ConversationSidebar = ({
   const [selectedConversationId, setSelectedConversationId] =
     useState<Id<"conversations"> | null>(null);
 
-
-    const [input ,setInput] = useState("")
+  const [input, setInput] = useState("");
   const createConversation = useCreateConversation();
 
   const conversations = useConversations(projectId);
@@ -88,34 +87,37 @@ export const ConversationSidebar = ({
     }
   };
 
-  const handleSubmit = async(message:PromptInputMessage)=>{
+  const handleSubmit = async (message: PromptInputMessage) => {
     try {
-      if(isProcessing && !message.text){
+      if (isProcessing && !message.text) {
         // await handleCancel()
         setInput("");
-        return ;
-        
+        return;
       }
 
-      let conversationId = activeConversationId 
-      if(!conversationId){
-        conversationId = await handleCreateConversation()
-        if(!conversationId){
-
+      let conversationId = activeConversationId;
+      if (!conversationId) {
+        conversationId = await handleCreateConversation();
+        if (!conversationId) {
           return;
         }
-        
-        
+      }
+      try {
+        await ky.post("/api/messages", {
+          json: {
+            conversationId,
+            message: message.text,
+          },
+        });
+      } catch (error) {
+        toast.error("Failed to sent message");
 
       }
-
-
     } catch (error) {
       toast.error("Unable to create new conversation");
-      return null;
-    }
 
-  }
+    }
+  };
 
   return (
     <div className="flex flex-col h-full bg-sidebar">
@@ -174,14 +176,19 @@ export const ConversationSidebar = ({
           <PromptInputBody>
             <PromptInputTextarea
               placeholder="Ask me anything.."
-              onChange={(e) => {setInput(e.target.value)}}
+              onChange={(e) => {
+                setInput(e.target.value);
+              }}
               value={input}
               disabled={isProcessing}
             />
           </PromptInputBody>
           <PromptInputFooter>
-            <PromptInputTools/>
-            <PromptInputSubmit disabled={isProcessing ? false : !input} status={isProcessing ? "streaming" : undefined} />
+            <PromptInputTools />
+            <PromptInputSubmit
+              disabled={isProcessing ? false : !input}
+              status={isProcessing ? "streaming" : undefined}
+            />
           </PromptInputFooter>
         </PromptInput>
       </div>
