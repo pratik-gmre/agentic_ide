@@ -2,42 +2,33 @@ import { Id } from "../../../../convex/_generated/dataModel";
 import {
   Conversation,
   ConversationContent,
-  ConversationDownload,
-  ConversationEmptyState,
+  
   ConversationScrollButton,
 } from "@/components/ai-elements/conversation";
 import {
   Message,
   MessageAction,
   MessageActions,
-  MessageBranch,
-  MessageBranchContent,
-  MessageBranchNext,
-  MessageBranchPage,
-  MessageBranchPrevious,
-  MessageBranchSelector,
+ 
   MessageContent,
   MessageResponse,
-  MessageToolbar,
+
 } from "@/components/ai-elements/message";
 import {
   PromptInput,
-  PromptInputActionAddAttachments,
-  PromptInputActionMenu,
-  PromptInputActionMenuContent,
-  PromptInputActionMenuTrigger,
+ 
   PromptInputBody,
-  PromptInputButton,
+
   PromptInputFooter,
   PromptInputMessage,
-  PromptInputProvider,
+
   PromptInputSubmit,
   PromptInputTextarea,
   PromptInputTools,
-  usePromptInputAttachments,
+
 } from "@/components/ai-elements/prompt-input";
 import ky from "ky";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   useConversations,
   useMessages,
@@ -186,7 +177,7 @@ export const ConversationSidebar = ({
           <PromptInputFooter>
             <PromptInputTools />
             <PromptInputSubmit
-              disabled={isProcessing ? false : !input}
+
               status={isProcessing ? "streaming" : undefined}
             />
           </PromptInputFooter>

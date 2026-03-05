@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import z from "zod";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
+import { inngest } from "@/inngest/client";
 
 const requestSchema = z.object({
   conversationId: z.string(),
@@ -62,14 +63,16 @@ export async function POST(request: Request) {
       },
     );
 
+    const event = await inngest.send({name:"message/sent",data:{messageId:assistantMessageId}})
+
     return NextResponse.json({
       success: true,
-      eventId: 0,
+      eventId:event.ids[0],
       messageId: assistantMessageId,
     });
   } catch (error) {
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: `Internal server error ${error}` },
       { status: 500 },
     );
   }
