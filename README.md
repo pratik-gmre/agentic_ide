@@ -152,8 +152,7 @@ convex/
 ### File Management
 
 - File explorer with folder hierarchy
-- Create, rename, delete files and folders
-- VSCode-style file icons
+- Create, rename, delete files and folder
 - Tab-based file navigation
 - Auto-save with debouncing
 
