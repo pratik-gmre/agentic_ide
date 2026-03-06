@@ -177,6 +177,5 @@ pnpm run lint      # Run ESLint
 ## Acknowledgments
 
 - [Cursor](https://cursor.sh) - Inspiration for the project
-- [Orchids](https://orchids.app) - Inspiration for the project
 - [shadcn/ui](https://ui.shadcn.com) - UI components
 - [CodeMirror](https://codemirror.net) - Code editor
