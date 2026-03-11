@@ -167,10 +167,10 @@ convex/
 ## Scripts
 
 ```bash
-pnpm run dev       # Start development server
-pnpm run build     # Build for production
-pnpm run start     # Start production server
-pnpm run lint      # Run ESLint
+pnpm run dev       
+pnpm run build     
+pnpm run start     
+pnpm run lint      
 ```
 
 
