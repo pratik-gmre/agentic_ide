@@ -1,6 +1,6 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
-import { stat } from "fs";
+
 
 export default defineSchema({
   projects: defineTable({

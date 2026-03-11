@@ -55,7 +55,7 @@ export const ProjectView = () => {
               <img
                 src="/vercel.svg"
                 alt=""
-                className="size-8 md:size-[46px]"
+                className="size-8 md:size-11.5"
               />
               <h1
                 className={cn(
